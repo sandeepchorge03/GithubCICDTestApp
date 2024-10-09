@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "799748753096",
+    "project_id": "githubcicdtestapp",
+    "storage_bucket": "githubcicdtestapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799748753096:android:8bee3b87a4f66238ed07fd",
+        "android_client_info": {
+          "package_name": "com.madtitan.githubcicdtestapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsUeEvuzy7uGuNsJFLqJNTm2uq7P810mw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
