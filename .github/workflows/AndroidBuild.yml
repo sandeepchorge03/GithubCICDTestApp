@@ -29,13 +29,14 @@ jobs:
 
       - name: build release
         run: bash ./gradlew assembleRelease
-            - name: upload artifact to Firebase App Distribution
-              uses: wzieba/Firebase-Distribution-Github-Action@v1
-              with:
-                appId: ${{secrets.FIREBASE_APP_ID}}
-                token: ${{secrets.FIREBASE_TOKEN}}
-                groups: Testers
-                file: app/build/outputs/apk/release/app-release-unsigned.apk
+
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+         appId: ${{secrets.FIREBASE_APP_ID}}
+         token: ${{secrets.FIREBASE_TOKEN}}
+         groups: Testers
+         file: app/build/outputs/apk/release/app-release-unsigned.apk
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
