@@ -1,23 +1,13 @@
-# This is a basic workflow to help you get started with Actions
 name: Android Build
 
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
-#  pull_request:
-#    branches: ["master"]
   push:
     branches: ["master"]
 
-  # A workflow run is made up of one or more jobs that can run sequentially or in parallel
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v4.1.1
 
@@ -27,27 +17,30 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: build release
-        run: bash ./gradlew assembleDebug
-#        run: bash ./gradlew assembleRelease
-
-      - name: upload artifact to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-         appId: ${{secrets.FIREBASE_APP_ID}}
-         token: ${{secrets.FIREBASE_TOKEN}}
-         groups: Testers
-         file: app/build/outputs/apk/debug/app-debug.apk
-#         file: app/build/outputs/apk/release/app-release-unsigned.apk
-
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
-      # Runs a single command using the runners shell
-#      - name: Build with Gradle
-#        run: ./gradlew build
+      - name: Generate app version
+        id: version-autopilot
+        uses: leblancmeneses/actions/apps/version-autopilot@v6.0.1
+        with:
+          major: 1
+          minor: 0
+          shift: 0
+
       - name: Build debug APK
-        run: bash ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace
+        env:
+          APP_VERSION_CODE: ${{ steps.version-autopilot.outputs.version_autopilot_code }}
+          APP_VERSION_STRING: ${{ steps.version-autopilot.outputs.version_autopilot_string_recommended }}
+
+      - name: Upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: Testers
+          file: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.3

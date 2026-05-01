@@ -4,6 +4,9 @@ plugins {
     id("com.google.gms.google-services")
 }
 
+val appVersionCode = System.getenv("APP_VERSION_CODE")?.toIntOrNull() ?: 10000
+val appVersionString = System.getenv("APP_VERSION_STRING") ?: "1.0.0"
+
 android {
     namespace = "com.madtitan.githubcicdtestapp"
     compileSdk = 34
@@ -12,10 +15,20 @@ android {
         applicationId = "com.madtitan.githubcicdtestapp"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = appVersionCode
+        // Version naming follows semantic app versioning like major.minor.patch.
+        versionName = appVersionString
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     buildTypes {
@@ -41,11 +54,16 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
 
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation("com.google.firebase:firebase-analytics")
+
+    debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
